@@ -10,8 +10,8 @@
 #define clz(x) clz2(x,0)
 #endif
 
-#if defined(overload)
-#include "clz.hpp"
+#if defined(generic)
+#include "clz_generic.h"
 #else
 #include "clz.h"
 #endif
@@ -97,8 +97,8 @@ int main(int argc, char *argv[])
     output = fopen("binary.txt","a");
 #elif defined(harley)
     output = fopen("harley.txt","a");
-#elif defined(overload)
-    output = fopen("overload.txt","a");
+#elif defined(generic)
+    output = fopen("generic.txt","a");
 #endif
     uint64_t timecall;
     for (uint32_t i = min; i < max; i++) {

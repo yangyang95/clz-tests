@@ -5,7 +5,7 @@ CFLAGS_binary  = -O0
 CFLAGS_byte  = -O0
 CFLAGS_harlay  = -O0
 CFLAGS_recursive  = -O0
-CFLAGS_overload  = -Wall -std=c++11 -g -DDEBUG -O0
+CFLAGS_generic  = -Wall -std=gnu11 -g -DDEBUG -O0
 ifeq ($(strip $(PROFILE)),1)
 CFLAGS_common += -Dcorrect
 endif
@@ -15,7 +15,7 @@ endif
 ifeq ($(strip $(MP)),1)
 CFLAGS_common += -fopenmp -DMP
 endif
-EXEC = iteration binary byte recursive harley 
+EXEC = iteration binary byte recursive harley  generic
 
 GIT_HOOKS := .git/hooks/pre-commit
 .PHONY: all
@@ -47,6 +47,9 @@ recursive: $(SRCS_common) recursive.c clz2.h
 	$(CC)  $(CFLAGS_common) $(CFLAGS_recursive) \
 		-o $@ -Drecursive $(SRCS_common) 
 
+generic: $(SRCS_common) generic.c clz_generic.h
+	$(CC)  $(CFLAGS_generic) \
+		-o $@ -Dgeneric $(SRCS_common)
 
 run: $(EXEC)
 	taskset -c 1 ./iteration 67100000 67116384
@@ -54,8 +57,9 @@ run: $(EXEC)
 	taskset -c 1 ./byte 67100000 67116384
 	taskset -c 1 ./recursive 67100000 67116384
 	taskset -c 1 ./harley 67100000 67116384
+	taskset -c 1 ./generic 67100000 67116384
 
-plot: iteration.txt iteration.txt binary.txt byte.txt harley.txt
+plot: iteration.txt iteration.txt binary.txt byte.txt harley.txt generic.txt
 	gnuplot scripts/runtime.gp
 
 .PHONY: clean
